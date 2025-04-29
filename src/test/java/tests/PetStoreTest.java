@@ -6,6 +6,7 @@ import animals.petstore.pet.attributes.Gender;
 import animals.petstore.pet.attributes.Skin;
 import animals.petstore.pet.types.Cat;
 import animals.petstore.pet.types.Dog;
+import animals.petstore.pet.types.Snake;
 import animals.petstore.store.DuplicatePetStoreRecordException;
 import animals.petstore.store.PetNotFoundSaleException;
 import animals.petstore.store.PetStore;
@@ -39,7 +40,8 @@ public class PetStoreTest
     @DisplayName("Inventory Count Test")
     public void validateInventory()
     {
-        assertEquals(5, petStore.getPetsForSale().size(),"Inventory counts are off!");
+        // Changed expected inventory value because three snakes were added to the PetStore inventory
+        assertEquals(8, petStore.getPetsForSale().size(),"Inventory counts are off!");
     }
 
     @Test
@@ -91,6 +93,64 @@ public class PetStoreTest
         assertEquals(sphynx.getPetStoreId(), removedItem.getPetStoreId(), "The cat items are identical");
     }
 
+    // ADDED NEW UNIT TEST TO INCREASE CODE COVERAGE FOR PART 1
+    @Test
+    @DisplayName("Greyhound Record Not Found Exception Test")
+    public void petNotFoundTest() throws PetNotFoundSaleException, DuplicatePetStoreRecordException {
+        // In PetStore, soldPetItem(Pet soldPet) throws PetNotFoundSaleException if the pet is not in any store aka petStoreId == 0
+        Dog greyHound = new Dog(AnimalType.DOMESTIC, Skin.FUR, Gender.FEMALE, Breed.GREY_HOUND,
+                new BigDecimal("300.00"), 0);
+
+        // ExpectedMessage is the same as the PetNotFoundSaleException message thrown in soldPetItem()
+        String expectedMessage = "The Pet is not part of the pet store!!";
+        Exception exception = assertThrows(PetNotFoundSaleException.class, () ->{
+            petStore.soldPetItem(greyHound);});
+        assertEquals(expectedMessage, exception.getMessage(), "RecordNotFoundExceptionTest was NOT encountered!");
+    }
+
+    // ADDED UNIT TESTS FOR NEW SNAKE CLASS
+    @Test
+    @DisplayName("Sale of Copperhead Snake Remove Item Test")
+    public void snakeSoldTest() throws DuplicatePetStoreRecordException, PetNotFoundSaleException {
+        int inventorySize = petStore.getPetsForSale().size() - 1;
+        // Snake is currently in inventory
+        Snake copperhead = new Snake(AnimalType.DOMESTIC, Skin.SCALES, Gender.FEMALE, Breed.COPPERHEAD,
+                new BigDecimal("250.00"), 1);
+        // Validation
+        petStore.soldPetItem(copperhead);
+        assertEquals(inventorySize, petStore.getPetsForSale().size(), "Expected inventory does not match actual");
+    }
+
+    @Test
+    @DisplayName("Copperhead Duplicate Record Exception Test")
+    public void snakeDupRecordExceptionTest() {
+        petStore.addPetInventoryItem(new Snake(AnimalType.DOMESTIC, Skin.SCALES, Gender.FEMALE, Breed.COPPERHEAD,
+                new BigDecimal("250.00"), 1));
+        Snake copperhead = new Snake(AnimalType.DOMESTIC, Skin.SCALES, Gender.FEMALE, Breed.COPPERHEAD,
+                new BigDecimal("250.00"), 1);
+
+        // Validation
+        String expectedMessage = "Duplicate Snake record store id [1]";
+        Exception exception = assertThrows(DuplicatePetStoreRecordException.class, () ->{
+            petStore.soldPetItem(copperhead);});
+        assertEquals(expectedMessage, exception.getMessage(), "DuplicateRecordExceptionTest was NOT encountered!");
+
+    }
+
+    @Test
+    @DisplayName("Copperhead Record Not Found Exception Test")
+    public void petNotFoundTestCopperhead() throws PetNotFoundSaleException, DuplicatePetStoreRecordException {
+        // In PetStore, soldPetItem(Pet soldPet) throws PetNotFoundSaleException if the pet is not in any store aka petStoreId == 0
+        Snake copperhead = new Snake(AnimalType.DOMESTIC, Skin.SCALES, Gender.FEMALE, Breed.COPPERHEAD,
+                new BigDecimal("250.00"), 0);
+
+        // ExpectedMessage is the same as the PetNotFoundSaleException message thrown in soldPetItem()
+        String expectedMessage = "The Pet is not part of the pet store!!";
+        Exception exception = assertThrows(PetNotFoundSaleException.class, () ->{
+            petStore.soldPetItem(copperhead);});
+        assertEquals(expectedMessage, exception.getMessage(), "RecordNotFoundExceptionTest was NOT encountered!");
+    }
+
     /**
      * Limitations to test factory as it does not instantiate before all
      * @return list of {@link DynamicNode} that contains the test results
@@ -118,6 +178,8 @@ public class PetStoreTest
 
         return nodes.stream();
     }
+
+
 
     /**
      * Example of parameterized test
