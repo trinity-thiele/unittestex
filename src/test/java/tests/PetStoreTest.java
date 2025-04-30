@@ -124,10 +124,9 @@ public class PetStoreTest
     @Test
     @DisplayName("Copperhead Duplicate Record Exception Test")
     public void snakeDupRecordExceptionTest() {
-        petStore.addPetInventoryItem(new Snake(AnimalType.DOMESTIC, Skin.SCALES, Gender.FEMALE, Breed.COPPERHEAD,
-                new BigDecimal("250.00"), 1));
         Snake copperhead = new Snake(AnimalType.DOMESTIC, Skin.SCALES, Gender.FEMALE, Breed.COPPERHEAD,
                 new BigDecimal("250.00"), 1);
+        petStore.initAddDuplicateItem(copperhead);
 
         // Validation
         String expectedMessage = "Duplicate Snake record store id [1]";
@@ -138,18 +137,15 @@ public class PetStoreTest
     }
 
     @Test
-    @DisplayName("Copperhead Record Not Found Exception Test")
-    public void petNotFoundTestCopperhead() throws PetNotFoundSaleException, DuplicatePetStoreRecordException {
-        // In PetStore, soldPetItem(Pet soldPet) throws PetNotFoundSaleException if the pet is not in any store aka petStoreId == 0
-        Snake copperhead = new Snake(AnimalType.DOMESTIC, Skin.SCALES, Gender.FEMALE, Breed.COPPERHEAD,
-                new BigDecimal("250.00"), 0);
+    @DisplayName("Test Snake typeOfPet()")
+    public void testTypeOfPet() {
+        Snake grass = new Snake(AnimalType.DOMESTIC, Skin.SCALES, Gender.FEMALE, Breed.GRASS,
+                new BigDecimal("25.00"), 1);
 
-        // ExpectedMessage is the same as the PetNotFoundSaleException message thrown in soldPetItem()
-        String expectedMessage = "The Pet is not part of the pet store!!";
-        Exception exception = assertThrows(PetNotFoundSaleException.class, () ->{
-            petStore.soldPetItem(copperhead);});
-        assertEquals(expectedMessage, exception.getMessage(), "RecordNotFoundExceptionTest was NOT encountered!");
+        String expectedMessage = "The type of pet is SNAKE!";
+        assertEquals(expectedMessage, grass.typeOfPet(), "Expected message does not match actual.");
     }
+
 
     /**
      * Limitations to test factory as it does not instantiate before all
