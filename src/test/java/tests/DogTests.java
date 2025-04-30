@@ -72,11 +72,11 @@ public class DogTests {
 
     @Test
     @Order(2)
-    @DisplayName("Dog Speak Grr Tests")
+    @DisplayName("Dog Speak grr Tests")
     public void dogGoesGrrTest()
     {
         actualDog = new Dog(AnimalType.WILD, Skin.UNKNOWN,Gender.UNKNOWN, Breed.UNKNOWN);
-        assertEquals("The dog goes Grr! Grr!", actualDog.speak(), "I was expecting Grr");
+        assertEquals("The dog goes grr! grr!", actualDog.speak(), "I was expecting grr");
     }
 
     @Test

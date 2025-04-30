@@ -76,10 +76,10 @@ public class Snake extends Pet implements PetImpl {
         String language;
         switch (this.animalType) {
             case DOMESTIC:
-                language = "The snake goes Psss! Psss!";
+                language = "The snake goes PSSS! PSSS!";
                 break;
             case WILD:
-                language = "The snake goes PSSSS! PSSSS!";
+                language = "The snake goes HISS! HISS!";
                 break;
             default:
                 language = "The snake goes " + super.getPetType().speak + "! " + super.getPetType().speak + "!";
