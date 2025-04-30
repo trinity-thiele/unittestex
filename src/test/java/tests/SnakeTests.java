@@ -6,6 +6,7 @@ import animals.petstore.pet.attributes.Gender;
 import animals.petstore.pet.attributes.Skin;
 import animals.petstore.pet.types.Snake;
 import org.junit.jupiter.api.*;
+import java.math.BigDecimal;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -57,11 +58,20 @@ public class SnakeTests {
 
     @Test
     @Order(2)
-    @DisplayName("Snake Gender Test FeMale")
+    @DisplayName("Snake Gender Test Female")
     public void genderTestFeMale()
     {
         actualSnake = new Snake(AnimalType.WILD, Skin.SCALES, Gender.FEMALE, Breed.UNKNOWN);
-        assertEquals(Gender.FEMALE, actualSnake.getGender(), "Expecting Male Gender!");
+        assertEquals(Gender.FEMALE, actualSnake.getGender(), "Expecting Female Gender!");
+    }
+
+    @Test
+    @Order(2)
+    @DisplayName("Snake Cost Test 100.00")
+    public void costTest100()
+    {
+        actualSnake = new Snake(AnimalType.WILD, Skin.SCALES, Gender.FEMALE, Breed.UNKNOWN, new BigDecimal("100.00"));
+        assertEquals(new BigDecimal("100.00"), actualSnake.getCost(), "Expecting cost value to be 100.00!");
     }
 
     @Test
